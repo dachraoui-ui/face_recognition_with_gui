@@ -3,11 +3,13 @@ import requests
 
 # SPARQL query to fetch player data
 query = """
-SELECT ?playerLabel ?teamLabel ?image WHERE {
+SELECT ?playerLabel ?teamLabel ?image ?birthDate ?height WHERE {
   ?player wdt:P31 wd:Q5;               # Instance of human
           wdt:P106 wd:Q937857;         # Occupation: football player
           wdt:P54 ?team;               # Member of a sports team
-          wdt:P18 ?image.              # Has image
+          wdt:P18 ?image;              # Has image
+          wdt:P569 ?birthDate;         # Date of birth
+          wdt:P2048 ?height.           # Height
   ?team wdt:P118 wd:Q9448.             # Team is part of the Premier League
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 }LIMIT 6000
@@ -32,7 +34,9 @@ CREATE TABLE IF NOT EXISTS players (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     team TEXT,
-    image_url TEXT
+    image_url TEXT,
+    age INTEGER,
+    height REAL
 )
 """)
 
@@ -41,9 +45,13 @@ for item in data["results"]["bindings"]:
     name = item["playerLabel"]["value"]
     team = item["teamLabel"]["value"]
     image_url = item["image"]["value"]
+    birth_date = item.get("birthDate", {}).get("value", None)
+    height = item.get("height", {}).get("value", None)
 
-    cursor.execute("INSERT INTO players (name, team, image_url) VALUES (?, ?, ?)", (name, team, image_url))
-
+    cursor.execute("""
+        INSERT INTO players (name, team, image_url, age, height)
+        VALUES (?, ?, ?, ?, ?)
+    """, (name, team, image_url, birth_date, height))
 
 # Commit and close the database connection
 conn.commit()
