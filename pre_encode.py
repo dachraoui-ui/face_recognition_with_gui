@@ -11,7 +11,7 @@ conn = sqlite3.connect("players.db")
 cursor = conn.cursor()
 
 # Fetch player data
-cursor.execute("SELECT name, age, height, image_url FROM players")
+cursor.execute("SELECT name, image_url, age, height FROM players")  # Make sure age and height are fetched
 players = cursor.fetchall()
 
 # User-Agent headers for fetching images
@@ -22,9 +22,11 @@ headers = {
 # Prepare data for encoding
 known_face_encodings = []
 known_face_names = []
+known_face_ages = []
+known_face_heights = []
 
 # Process each player image
-for name, age, height, image_url in players:
+for name, image_url, age, height in players:  # Include age and height
     try:
         response = requests.get(image_url, headers=headers)
         response.raise_for_status()
@@ -36,7 +38,9 @@ for name, age, height, image_url in players:
         face_encodings = face_recognition.face_encodings(image_array)
         if face_encodings:
             known_face_encodings.append(face_encodings[0])
-            known_face_names.append(f"{name} (Age: {age}, Height: {height}m)")
+            known_face_names.append(name)
+            known_face_ages.append(age)  # Save age
+            known_face_heights.append(height)  # Save height
         else:
             print(f"No face found for {name}, skipping.")
     except (UnidentifiedImageError, IndexError):
@@ -44,9 +48,9 @@ for name, age, height, image_url in players:
     except requests.RequestException as e:
         print(f"Error fetching image for {name}: {e}")
 
-# Save encodings and names to a file
+# Save encodings, names, ages, and heights to a file
 with open("known_faces.pkl", "wb") as file:
-    pickle.dump((known_face_encodings, known_face_names), file)
+    pickle.dump((known_face_encodings, known_face_names, known_face_ages, known_face_heights), file)
 
 print("Face data saved to known_faces.pkl.")
 

@@ -12,7 +12,7 @@ SELECT ?playerLabel ?teamLabel ?image ?birthDate ?height WHERE {
           wdt:P2048 ?height.           # Height
   ?team wdt:P118 wd:Q9448.             # Team is part of the Premier League
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-}LIMIT 6000
+}LIMIT 10
 """
 
 # URL to query Wikidata
@@ -28,9 +28,12 @@ data = response.json()
 conn = sqlite3.connect("players.db")
 cursor = conn.cursor()
 
-# Create players table if it doesn't exist
+# Drop the existing table if it exists
+cursor.execute("DROP TABLE IF EXISTS players")
+
+# Create a new table with the updated structure
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS players (
+CREATE TABLE players (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     team TEXT,
@@ -48,10 +51,19 @@ for item in data["results"]["bindings"]:
     birth_date = item.get("birthDate", {}).get("value", None)
     height = item.get("height", {}).get("value", None)
 
+    # Calculate the age based on birth date (if available)
+    if birth_date:
+        from datetime import datetime
+        birth_year = int(birth_date.split("-")[0])
+        current_year = datetime.now().year
+        age = current_year - birth_year
+    else:
+        age = None
+
     cursor.execute("""
         INSERT INTO players (name, team, image_url, age, height)
         VALUES (?, ?, ?, ?, ?)
-    """, (name, team, image_url, birth_date, height))
+    """, (name, team, image_url, age, height))
 
 # Commit and close the database connection
 conn.commit()
