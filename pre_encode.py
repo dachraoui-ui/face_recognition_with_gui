@@ -11,7 +11,7 @@ conn = sqlite3.connect("players.db")
 cursor = conn.cursor()
 
 # Fetch player data
-cursor.execute("SELECT name, image_url FROM players")
+cursor.execute("SELECT name, age, height, image_url FROM players")
 players = cursor.fetchall()
 
 # User-Agent headers for fetching images
@@ -24,7 +24,7 @@ known_face_encodings = []
 known_face_names = []
 
 # Process each player image
-for name, image_url in players:
+for name, age, height, image_url in players:
     try:
         response = requests.get(image_url, headers=headers)
         response.raise_for_status()
@@ -36,7 +36,7 @@ for name, image_url in players:
         face_encodings = face_recognition.face_encodings(image_array)
         if face_encodings:
             known_face_encodings.append(face_encodings[0])
-            known_face_names.append(name)
+            known_face_names.append(f"{name} (Age: {age}, Height: {height}m)")
         else:
             print(f"No face found for {name}, skipping.")
     except (UnidentifiedImageError, IndexError):
