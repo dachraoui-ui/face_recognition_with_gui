@@ -12,7 +12,7 @@ SELECT ?playerLabel ?teamLabel ?image ?birthDate ?height WHERE {
           wdt:P2048 ?height.           # Height
   ?team wdt:P118 wd:Q9448.             # Team is part of the Premier League
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-}LIMIT 10
+}LIMIT 20
 """
 
 

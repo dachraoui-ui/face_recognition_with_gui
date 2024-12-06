@@ -4,7 +4,7 @@ from PIL import Image, ImageTk, ImageDraw
 import face_recognition
 import pickle
 import numpy as np
-from tkinter import messagebox
+
 
 
 try:
@@ -21,7 +21,7 @@ def upload_and_process_image():
     if not file_path:
         return
 
-
+##add this
     unknown_image = face_recognition.load_image_file(file_path)
     face_locations = face_recognition.face_locations(unknown_image)
     face_encodings = face_recognition.face_encodings(unknown_image, face_locations)
