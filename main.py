@@ -21,15 +21,13 @@ def upload_and_process_image():
     if not file_path:
         return
 
-##add this
-#this is it
+
     unknown_image = face_recognition.load_image_file(file_path)
     face_locations = face_recognition.face_locations(unknown_image)
     face_encodings = face_recognition.face_encodings(unknown_image, face_locations)
 
     pil_image = Image.fromarray(unknown_image)
     draw = ImageDraw.Draw(pil_image)
-
 
 
     for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
