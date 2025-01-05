@@ -15,6 +15,7 @@ SELECT ?playerLabel ?teamLabel ?image ?birthDate ?height WHERE {
 }LIMIT 20
 """
 #another query
+#query = """
 
 
 url = "https://query.wikidata.org/sparql"
