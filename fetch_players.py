@@ -15,7 +15,7 @@ SELECT ?playerLabel ?teamLabel ?image ?birthDate ?height WHERE {
 }LIMIT 20
 """
 #another query
-#query = "select from that table where the player is a football player and the team is in the premier league""
+
 
 
 url = "https://query.wikidata.org/sparql"
