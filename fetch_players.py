@@ -14,7 +14,7 @@ SELECT ?playerLabel ?teamLabel ?image ?birthDate ?height WHERE {
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 }LIMIT 20
 """
-#another query
+
 
 
 
