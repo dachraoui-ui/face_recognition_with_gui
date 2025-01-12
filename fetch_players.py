@@ -14,7 +14,7 @@ SELECT ?playerLabel ?teamLabel ?image ?birthDate ?height WHERE {
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 }LIMIT 20
 """
-# The query fetches the names, teams, images, birth dates, and heights of 20 football players who are members of a Premier League team.
+
 
 
 
