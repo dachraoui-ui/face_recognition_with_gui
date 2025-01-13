@@ -1,6 +1,6 @@
 import sqlite3
 import requests
-
+from tensorflow.python.distribute.strategy_combinations import multi_worker_mirrored_2x2_gpu_no_merge_call
 
 query = """
 SELECT ?playerLabel ?teamLabel ?image ?birthDate ?height WHERE {
@@ -14,6 +14,7 @@ SELECT ?playerLabel ?teamLabel ?image ?birthDate ?height WHERE {
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 }LIMIT 20
 """
+#i think so the query is not correct, i will try to fix it
 
 
 
